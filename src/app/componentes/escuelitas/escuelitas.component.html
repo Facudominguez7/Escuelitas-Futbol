@@ -1,0 +1,288 @@
+<!-- Botones -->
+<section id="actions" class="py-4 mb-4 bg-light">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-3">
+        <a
+          href="#"
+          class="btn btn-primary btn-block"
+          data-bs-toggle="modal"
+          data-bs-target="#agregarEscuelitaModal"
+        >
+          <i class="fas fa-plus"></i>Agregar Escuelita
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <input
+        type="text"
+        [(ngModel)]="busqueda"
+        placeholder="Buscar por nombre..."
+        style="text-align: center"
+        required
+      />
+      &nbsp;
+
+      <button class="btn btn-success btn-block" >
+        <i class="fa fa-search"></i>Buscar
+      </button>
+    </div>
+
+    <div class="col-md-6">
+      <input
+        type="text"
+        [(ngModel)]="busquedaDni"
+        placeholder="Buscar por DNI..."
+        style="text-align: center"
+        required
+      />
+      &nbsp;
+
+      <button class="btn btn-success btn-block" >
+        <i class="fa fa-search"></i>Buscar
+      </button>
+    </div>
+  </div>
+</div>
+
+<hr />
+
+<!-- Listado Escuelitas-->
+<section id="escuelitas">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-9">
+        <div class="card">
+          <div class="card-header">
+            <h4>Listado de Escuelitas</h4>
+          </div>
+
+          <table class="table table-striped ">
+            <thead class="table-dark">
+              <tr>
+                <th>#</th>
+                <th>Nombre</th>
+                <th>Dirección</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let escuelita of escuelitasFiltradas; let i = index">
+                <td>{{ i + 1 }}</td>
+                <td>{{ escuelita.nombre }}</td>
+                <td>{{ escuelita.direccion }}</td>
+
+                <td class="button-container">
+                  <a
+                    routerLink="/escuelita/editar/{{ escuelita.id }}"
+                    class="btn btn-secondary"
+                  >
+                    <i class="fas fa-angle-double-right"></i> Editar
+                  </a>
+                  &nbsp;
+
+                  <a
+                    routerLink="/escuelita/info/{{ escuelita.id }}"
+                    class="btn btn-secondary"
+                  >
+                    <i class="fas fa-angle-double-right"></i> Info
+                  </a>
+
+                  &nbsp;
+
+
+
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Tarjeta Lateral -->
+      <div class="col-md-3">
+        <div class="card text-center bg-success text-white mb-3">
+          <div class="card-body">
+            <h3>Total Escuelitas</h3>
+            <h4 class="display-4">
+              <i class="fas fa-house"></i> {{ escuelitas?.length }}
+            </h4>
+          </div>
+        </div>
+      </div>
+      <!--Fin Tarjeta Lateral-->
+    </div>
+  </div>
+</section>
+
+<!--Agregar comedor modal-->
+<div class="modal fade" id="agregarEscuelitaModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-info text-white">
+        <h5 class="modal-title">Agregar Escuelita</h5>
+        <button class="close" data-bs-dismiss="modal" #botonCerrar>
+          <span>&times;</span>
+        </button>
+      </div>
+
+      <flash-messages></flash-messages>
+
+      <form #escuelitaForm="ngForm" (ngSubmit)="agregar(escuelitaForm)">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="nombre">Nombre</label>
+            <input
+              type="text"
+              name="nombre"
+              class="form-control"
+              #nombre="ngModel"
+              [(ngModel)]="escuelita.nombre"
+              [ngClass]="{ 'is-invalid': nombre.errors && nombre.touched }"
+              required
+              minlength="2"
+            />
+            <div
+              [hidden]="!nombre.errors?.['required']"
+              class="invalid-feedback"
+            >
+              Nombre requerido
+            </div>
+            <div
+              [hidden]="!nombre.errors?.['minlength']"
+              class="invalid-feedback"
+            >
+              Debe contener al menos 2 caracteres
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="direccion">Dirección</label>
+            <input
+              type="text"
+              name="direccion"
+              class="form-control"
+              #direccion="ngModel"
+              [(ngModel)]="escuelita.direccion"
+              [ngClass]="{
+                'is-invalid': direccion.errors && direccion.touched
+              }"
+              required
+              minlength="2"
+            />
+            <div
+              [hidden]="!direccion.errors?.['required']"
+              class="invalid-feedback"
+            >
+              Direccion requerida
+            </div>
+            <div
+              [hidden]="!direccion.errors?.['minlength']"
+              class="invalid-feedback"
+            >
+              Debe contener almenos 2 caracteres
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="nombreRes">Nombre y Apellido del Responsable</label>
+            <input
+              type="text"
+              name="nombreRes"
+              class="form-control"
+              #nombreRes="ngModel"
+              [(ngModel)]="escuelita.nombreRes"
+              [ngClass]="{
+                'is-invalid': nombreRes.errors && nombreRes.touched
+              }"
+              required
+              minlength="2"
+            />
+            <div
+              [hidden]="!nombreRes.errors?.['required']"
+              class="invalid-feedback"
+            >
+              Nombre de Responsable requerido
+            </div>
+            <div
+              [hidden]="!nombreRes.errors?.['minlength']"
+              class="invalid-feedback"
+            >
+              Debe conrener al menos 2 caracteres
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="numTelefono">Número de telefono del responsable</label>
+            <input
+              type="text"
+              name="numTelefono"
+              class="form-control"
+              #numTelefono="ngModel"
+              [(ngModel)]="escuelita.numTelefono"
+              [ngClass]="{
+                'is-invalid': numTelefono.errors && numTelefono.touched
+              }"
+              required
+              minlength="2"
+            />
+            <div
+              [hidden]="!numTelefono.errors?.['required']"
+              class="invalid-feedback"
+            >
+              Numero de telefono del responsable requerido
+            </div>
+            <div [hidden]="!numTelefono.errors?.['minlength']" class="invalid-feedback">
+              Debe contener al menos 2 caracteres
+            </div>
+          </div>
+
+
+
+
+
+
+          <div class="form-group">
+            <label for="ubicacion"
+              >Agregue el link correspondiente a la ubicación del Comedor /
+              Merendero (Formato https://)</label
+            >
+            <input
+              type="text"
+              name="ubicacion"
+              class="form-control"
+              #ubicacion="ngModel"
+              [(ngModel)]="escuelita.ubicacion"
+              [ngClass]="{
+                'is-invalid': ubicacion.errors && ubicacion.touched
+              }"
+              required
+              minlength="2"
+            />
+            <div
+              [hidden]="!ubicacion.errors?.['required']"
+              class="invalid-feedback"
+            >
+              Ubicacion requerida
+            </div>
+            <div
+              [hidden]="!ubicacion.errors?.['minlength']"
+              class="invalid-feedback"
+            >
+              Debe contener al menos 2 caracteres
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
